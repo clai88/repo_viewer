@@ -12,9 +12,19 @@ class Github
     def retrieve_repos
         repos = {}
         avatar = ""
-        self.class.get("/users/#{@name}/repos").each do  |repo|
+
+        results = self.class.get("/users/#{@name}/repos")
+
+        # binding.pry
+
+        #valid user
+        if results[0] == nil
+            print @name.red
+            puts " does not have any repositories"
+        else
+        avatar = results[0]["owner"]["avatar_url"]
+        results.each do  |repo|
             # binding.pry
-            avatar = repo["owner"]["avatar_url"]
             repo_name = repo["name"]
             repos[repo_name] = "https://github.com/#{@name}/#{repo_name}"
         end
@@ -24,6 +34,8 @@ class Github
         puts "\t\t\tURL".green
 
         repos.each {|k,v| printf "%-31s %s\n", k,v}
+        end
+        
     end
 end
 
